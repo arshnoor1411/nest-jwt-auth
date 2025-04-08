@@ -1,13 +1,14 @@
+const otpGenerator = require('otp-generator');
 
-import otpGenerator from 'otp-generator';
+const OTP_LENGTH = 6;
 
 export default function generateOtp() {
-  const generateOtp = otpGenerator.generate(6, {
+  const generateOtp = otpGenerator.generate(OTP_LENGTH, {
     upperCaseAlphabets: false,
     specialChars: false,
-    digits: false,
+    digits: true,
     lowerCaseAlphabets: false,
   });
-
+  
   return generateOtp;
 }

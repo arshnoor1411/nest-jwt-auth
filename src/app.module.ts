@@ -6,6 +6,7 @@ import { applicationConfig } from 'config/application-config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -19,6 +20,13 @@ import { User } from './users/entities/user.entity';
       entities: [User],
       synchronize: true,
     }),
+
+    JwtModule.register({
+      global: true,
+      secret: applicationConfig.jwt.secret,
+      signOptions: { expiresIn: '12h' },
+    }),
+    
     AuthModule,
     UsersModule,
   ],

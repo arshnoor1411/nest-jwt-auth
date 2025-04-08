@@ -64,7 +64,7 @@ export class User {
   createdAt: Date;
 
   @UpdateDateColumn({
-    name: 'created_at',
+    name: 'updated_at',
     type: 'timestamptz',
     nullable: false,
   })
