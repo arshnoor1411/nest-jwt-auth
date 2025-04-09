@@ -10,10 +10,30 @@ export class JwtAuthService{
         private jwtService: JwtService
     ){}
 
-    async generateToken(user: User){
+    async generateAccessToken(user: User){
         const payload = { email: user.email, firstname: user.firstName, sub: user.id };
         return this.jwtService.sign(payload,{
             secret: applicationConfig.jwt.secret
         })
     }
+
+    async generateRefreshToken(user: User) {
+        const payload = { sub: user.id };
+        return this.jwtService.sign(payload, {
+          secret: applicationConfig.jwt.refreshSecret,
+          expiresIn: '7d',
+        });
+      }
+    
+      async verifyRefreshToken(token: string) {
+        try {
+          const payload = await this.jwtService.verifyAsync(token, {
+            secret: applicationConfig.jwt.refreshSecret,
+          });
+          return payload;
+        } catch (error) {
+          throw new UnauthorizedException('Invalid refresh token');
+        }
+      }
+    
 }
