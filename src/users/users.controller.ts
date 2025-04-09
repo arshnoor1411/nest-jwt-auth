@@ -21,21 +21,12 @@ export class UsersController {
   @Post('/sign-up')
   async create(@Body() createUserDto: CreateUserDto) {
     try {
-      const userExists = await this.findOne(createUserDto.email)
+      const userExists = await this.findOne(createUserDto.email);
 
       if(userExists){
         throw new HttpException('User with email already exist', HttpStatus.BAD_REQUEST);
       }
       return this.usersService.create(createUserDto);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  @Get('/login')
-  async login(@Body('email') email:string, @Body('password') password:string){
-    try {
-      return await this.usersService.login(email, password)
     } catch (error) {
       throw error;
     }
@@ -58,6 +49,26 @@ export class UsersController {
       throw error;
     }
   }
+
+
+  @Get('/login')
+  async login(@Body('email') email:string, @Body('password') password:string){
+    try {
+      return await this.usersService.login(email, password);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Post('/refresh-token')
+  async refreshToken(@Body('refreshToken') refreshToken: string) {
+    try {
+      return await this.usersService.refreshToken(refreshToken);
+    } catch (error) {
+      throw new HttpException('Invalid refresh token', HttpStatus.UNAUTHORIZED);
+    }
+  }
+  
 
   @Get(':email')
   async findOne(@Param('email') email: string) {

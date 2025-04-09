@@ -91,6 +91,7 @@ export class UsersService {
 
   async login(email: string, password: string){
     let accessToken;
+    let refreshToken;
 
     const user = await this.findOne(email)
 
@@ -104,10 +105,34 @@ export class UsersService {
       throw new HttpException('Wrong Password', HttpStatus.BAD_REQUEST)
     }
 
-    accessToken = await this.jwtService.generateToken(user)
-    console.log("Access_Token",accessToken)
+    accessToken = await this.jwtService.generateAccessToken(user)
+    refreshToken = await this.jwtService.generateRefreshToken(user);
 
-    return accessToken;
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  async refreshToken(refreshToken: string){
+    const payload = await this.verifyRefreshToken(refreshToken);
+    const user = await this.findById(payload.sub);
+
+    const newAccessToken = await this.jwtService.generateAccessToken(user);
+    const newRefreshToken = await this.jwtService.generateRefreshToken(user);
+
+    return {
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    };
+  }
+
+  async verifyRefreshToken(token: string) {
+    return await this.jwtService.verifyRefreshToken(token);
+  }
+  
+  async findById(id: string) {
+    return await this.userRepository.findOne({ where: { id } });
   }
 
   async findOne(email: string) {
