@@ -3,10 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { applicationConfig } from 'config/application-config';
-import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { PostsModule } from './posts/posts.module';
+import { Post } from './posts/entities/post.entity';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { JwtModule } from '@nestjs/jwt';
       username: applicationConfig.db.user,
       password: applicationConfig.db.password,
       database: applicationConfig.db.name,
-      entities: [User],
+      entities: [User, Post],
       synchronize: true,
     }),
 
@@ -27,8 +28,8 @@ import { JwtModule } from '@nestjs/jwt';
       signOptions: { expiresIn: '12h' },
     }),
     
-    AuthModule,
     UsersModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
