@@ -11,6 +11,7 @@ export const applicationConfig = {
 
   jwt: {
     secret: 'nest-auth',
+    refreshSecret: 'nest-refrsh-auth'
   },
 
   rateLimit: {
